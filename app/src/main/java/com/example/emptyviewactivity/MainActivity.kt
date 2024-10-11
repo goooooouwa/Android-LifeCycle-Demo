@@ -24,8 +24,8 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        etName = findViewById(R.id.etName)
-        etAge = findViewById(R.id.etAge)
+        etName = findViewById(R.id.etHeight)
+        etAge = findViewById(R.id.etHeight)
         sf = getSharedPreferences("mySP", MODE_PRIVATE)
         sfEditor = sf.edit()
 
