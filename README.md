@@ -1,1 +1,1 @@
-Check Logs with "MyTag" tag for each Activity Lifecycle methods.
+Print each Activity Lifecycle methods in logs with "MyTag" tag.
