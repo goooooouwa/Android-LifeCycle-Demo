@@ -1,6 +1,7 @@
 package com.example.emptyviewactivity
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -11,6 +12,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var etName: EditText
+    private lateinit var etAge: EditText
+    private lateinit var sf:SharedPreferences
+    private lateinit var sfEditor:SharedPreferences.Editor
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i("MyTag", "MainActivity: OnCreate")
@@ -18,14 +24,20 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
+        etName = findViewById(R.id.etName)
+        etAge = findViewById(R.id.etAge)
+        sf = getSharedPreferences("mySP", MODE_PRIVATE)
+        sfEditor = sf.edit()
+
         val btnSubmit = findViewById<Button>(R.id.btnSubmit)
         btnSubmit.setOnClickListener {
             Log.i("MyTag", "Submit Clicked")
             val intent = Intent(this, SecondActivity::class.java)
-            val etName = findViewById<EditText>(R.id.etName)
-            var nameText = etName.text.toString()
+            val nameText = etName.text.toString()
+            val age = etAge.text.toString().toInt()
             intent.putExtra("Name", nameText)
-            Log.i("MyTag", "Name is $nameText")
+            intent.putExtra("Age", age)
+            Log.i("MyTag", "Name is $nameText, I'm $age years old.")
             startActivity(intent)
         }
 
@@ -44,11 +56,24 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Log.i("MyTag", "MainActivity: OnResume")
+        val nameText = sf.getString("spName", null)
+        val age = sf.getInt("spAge",0)
+        etName.setText(nameText)
+        if(age!=0){
+            etAge.setText(age.toString())
+        }
     }
 
     override fun onPause() {
         super.onPause()
         Log.i("MyTag", "MainActivity: OnPause")
+        val nameText = etName.text.toString()
+        val age = etAge.text.toString().toInt()
+        sfEditor.apply {
+            putString("spName", nameText)
+            putInt("spAge", age)
+            commit()
+        }
     }
 
     override fun onStop() {
